@@ -20,6 +20,7 @@ function setup() {
 function updateCanvas() {
   background(255);
   drawGrid();
+  select('#score').html(score);
 }
 
 function keyPressed() {
