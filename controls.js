@@ -25,3 +25,20 @@ function combine(row) {
   }
   return row;
 }
+
+function isGameOver() {
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] == 0) {
+        return false;
+      }
+      if (i !== n-1 && grid[i][j] === grid[i + 1][j]) {
+        return false;
+      }
+      if (j !== n-1 && grid[i][j] === grid[i][j + 1]) {
+        return false;
+      }
+    }
+  }
+  return true;
+}

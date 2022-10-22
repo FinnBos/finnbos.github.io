@@ -1,26 +1,71 @@
 let grid;
 let grid_new;
-let score=0;
-let hardcore=false;
-let n=0;
+let score = 0;
+let mode;
+let n = 0;
+let hardcore = false;
+let buttonHardcore;
 
 function setup() {
-  n=5;
-  createCanvas(n*100, n*100);
+  createCanvas(500, 500);
   noLoop();
-  hardcore=true;
-  grid = blankGrid(hardcore);
-  console.table(grid);
-  grid_new = blankGrid(hardcore);
+
+  buttonHardcore = createButton("Hardcore");
+  buttonHardcore.position(0, 650);
+  buttonHardcore.mousePressed(modeHardcore);
+  buttonClassic = createButton("Classic");
+  buttonClassic.position(100, 650);
+  buttonClassic.mousePressed(modeClassic);
+  button5x5 = createButton("5x5");
+  button5x5.position(200, 650);
+  button5x5.mousePressed(mode5x5);
+  buttonReplay = createButton("Replay");
+  buttonReplay.position(0,600);
+  buttonReplay.mousePressed(startGame);
+  buttonReplay.hide();
+
+  //updateCanvas();
+}
+function startGame() {
+  buttonReplay.hide();
+  grid = blankGrid(mode);
+  grid_new = blankGrid(mode);
   addNumber();
   addNumber();
+  score = 0;
   updateCanvas();
+}
+
+function modeHardcore() {
+  if (hardcore == false) {
+    hardcore = true;
+    buttonHardcore.style("background-color", "#FF0000");
+  }
+  else {
+    buttonHardcore.style("background-color", "#9E9E9E");
+    hardcore = false;
+  }
+}
+
+function mode5x5() {
+  mode = "5x5";
+  n = 5;
+  button5x5.hide();
+  buttonClassic.show();
+  startGame();
+}
+function modeClassic() {
+  mode = "classic";
+  n = 4;
+  button5x5.show();
+  buttonClassic.hide();
+  startGame();
 }
 
 function updateCanvas() {
   background(255);
   drawGrid();
-  select('#score').html(score);
+  select("#score").html(score);
 }
 
 function keyPressed() {
@@ -42,20 +87,9 @@ function keyPressed() {
       break;
     case LEFT_ARROW:
       grid = transposeGrid(grid);
-      grid = flipGrid(grid);  
+      grid = flipGrid(grid);
       flipped = true;
       rotated = true;
-      break;
-      case 72:
-      if(hardcore == true){
-        hardcore = false;
-        console.log("Mode Hardcore désactive !")
-      } 
-      else{
-        hardcore = true;
-        console.log("Mode Hardcore activé !");
-      }
-      played = false;
       break;
     default:
       played = false;
@@ -67,22 +101,29 @@ function keyPressed() {
       grid[i] = operate(grid[i]);
     }
     let changed = compareGrid(past, grid);
-    if(flipped){
+    if (flipped) {
       grid = flipGrid(grid);
     }
-    if(rotated){
+    if (rotated) {
       grid = transposeGrid(grid);
     }
     if (changed) addNumber();
-    if(hardcore==true) addNumber();
+    if (hardcore == true) addNumber();
+    
+    let gameover=isGameOver();
+    if(gameover==true){
+      console.log("Game Over !");
+      buttonReplay.show();
+    }
+    
     updateCanvas();
-    console.log("Score : "+score);
+    console.log("Score : " + score);
   }
 }
 
 function drawGrid() {
   background(255);
-  let w = 100;
+  let w = (500/n);
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
       noFill();
@@ -102,7 +143,7 @@ function drawGrid() {
       } else {
         noFill();
       }
-      rect(i * w, j * w, w, w,10);
+      rect(i * w, j * w, w, w, 25);
       if (val !== 0) {
         textAlign(CENTER, CENTER);
         noStroke();

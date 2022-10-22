@@ -1,12 +1,12 @@
 function blankGrid(hardcore) {
-  if (hardcore == false)
+  if (mode == "classic")
     return [
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
     ];
-  else {
+  else if (mode== "5x5") {
     return [
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
